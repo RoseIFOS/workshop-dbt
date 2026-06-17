@@ -1,0 +1,28 @@
+flowchart LR
+    subgraph seeds["Seeds (CSV)"]
+        S1["cadastros.csv"]
+        S2["pedidos.csv"]
+    end
+
+    subgraph staging["Staging (view) - padroniza"]
+        ST1["stg_cadastros"]
+        ST2["stg_cadastros2"]
+        ST3["stg_pedidos"]
+    end
+
+    subgraph inter["Intermediate (table) - dim & fact"]
+        D1["int_dim_clientes"]
+        D2["int_dim_date"]
+        F1["int_fact_pedidos"]
+    end
+
+    subgraph mart["Mart (table) - pronto p/ consumo"]
+        M1["mart_metricas_clientes"]
+        M2["mart_vendas_por_periodo"]
+    end
+
+    S1 --> ST1 & ST2
+    S2 --> ST3
+    ST1 & ST2 --> D1
+    ST3 --> F1
+    D1 & D2 & F1 --> M1 & M2

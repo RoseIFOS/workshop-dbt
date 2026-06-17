@@ -1,0 +1,23 @@
+erDiagram
+    INT_DIM_CLIENTES ||--o{ INT_FACT_PEDIDOS : "fk_cliente"
+    INT_DIM_DATE     ||--o{ INT_FACT_PEDIDOS : "dt_pedido"
+    INT_FACT_PEDIDOS {
+        string sk_pedido PK
+        string fk_cliente FK
+        string id_pedido
+        timestamp dt_pedido
+        numeric valor_total_pedido
+    }
+    INT_DIM_CLIENTES {
+        string sk_cliente PK
+        string cpf
+        string nome
+        string estado
+        string cidade
+    }
+    INT_DIM_DATE {
+        date date_day PK
+        int year_number
+        string month_name
+        string day_of_week_name
+    }

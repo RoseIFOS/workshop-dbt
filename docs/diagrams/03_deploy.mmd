@@ -1,0 +1,16 @@
+flowchart TB
+    subgraph local["Desenvolvimento local"]
+        LDEV["astro dev start<br/>(em 3_airflow)"]
+        LMOUNT["docker-compose.override.yml<br/>monta o dbt em<br/>/usr/local/airflow/dbt/wks_dbt"]
+        LDEV --- LMOUNT
+    end
+
+    subgraph cloud["Nuvem (Astro)"]
+        direction TB
+        D1["Passo 1: astro dbt deploy<br/>(em 2_data_warehouse/wks_dbt)<br/>monta dbt em<br/>/usr/local/airflow/dbt/wks_dbt"]
+        D2["Passo 2: astro deploy<br/>(em 3_airflow)<br/>envia DAGs + imagem"]
+    end
+
+    DEPLOY["Deployment no Astro<br/>roda a DbtDag"]
+    D1 --> DEPLOY
+    D2 --> DEPLOY

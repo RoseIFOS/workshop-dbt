@@ -1,0 +1,28 @@
+flowchart TB
+    subgraph repos["Dois repositorios Git"]
+        DW["<b>workshop-dbt-dw</b><br/>pasta: 2_data_warehouse<br/>projeto dbt: wks_dbt"]
+        AF["<b>workshop-dbt-airflow</b><br/>pasta: 3_airflow<br/>projeto Astro / Airflow"]
+        DW -. git submodule<br/>(p/ dev local) .-> AF
+    end
+
+    subgraph orq["Orquestracao (Airflow + Cosmos)"]
+        DAG["dag.py<br/>DbtDag (Cosmos)<br/>escolhe dev ou prod<br/>via Variable dbt_env"]
+    end
+
+    subgraph dbtproj["Transformacao (dbt)"]
+        DBT["models: staging --> intermediate --> mart<br/>packages: dbt_utils, dbt_expectations"]
+    end
+
+    subgraph banks["Bancos PostgreSQL"]
+        PGDEV["Postgres DEV<br/>(Docker local)<br/>conn: docker_postgres_db"]
+        PGPROD["Postgres PROD<br/>(Railway)<br/>conn: railway_postgres_db"]
+    end
+
+    AF --> DAG --> DBT
+    DBT -->|target=dev| PGDEV
+    DBT -->|target=prod| PGPROD
+
+    subgraph ci["CI (GitHub Actions no repo dw)"]
+        CIJOB["push na main<br/>dbt deps + dbt build<br/>contra o Railway (prod)"]
+    end
+    DW --> CIJOB --> PGPROD
